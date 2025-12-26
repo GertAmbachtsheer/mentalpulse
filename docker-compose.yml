@@ -5,13 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    # Remove the 'ports' section if you only want to use the domain
     restart: always
     networks:
-      - web-network
+      - dokploy-network
 
 networks:
-  web-network:
-    driver: bridge
-  dokploy-network: # Define it as an external network
+  dokploy-network:
     external: true

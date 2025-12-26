@@ -3,7 +3,6 @@ FROM ghcr.io/cirruslabs/flutter:stable AS build
 WORKDIR /app
 
 # Pre-cache the Flutter Web SDK
-RUN flutter upgrade
 RUN flutter precache --web
 
 COPY pubspec.yaml pubspec.lock ./
