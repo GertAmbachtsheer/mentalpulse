@@ -1,0 +1,40 @@
+mutation CreateMoodEntry($moodOptionId: UUID!, $entryText: String, $latitude: Float, $longitude: Float) @auth(level: USER) {
+  moodEntry_insert(data: {
+    moodOptionId: $moodOptionId,
+    userId_expr: "auth.uid",
+    createdAt_expr: "request.time",
+    entryText: $entryText,
+    latitude: $latitude,
+    longitude: $longitude
+  })
+}
+
+query GetMoodEntriesForUser @auth(level: USER) {
+  moodEntries(where: {userId: {eq_expr: "auth.uid"}}) {
+    id
+    moodOption {
+      id
+      name
+      value
+    }
+    createdAt
+    entryText
+    latitude
+    longitude
+  }
+}
+
+mutation UpdateMoodEntry($id: UUID!, $entryText: String, $latitude: Float, $longitude: Float) @auth(level: USER) {
+  moodEntry_update(
+    id: $id,
+    data: {
+      entryText: $entryText,
+      latitude: $latitude,
+      longitude: $longitude
+    }
+  )
+}
+
+mutation DeleteMoodEntry($id: UUID!) @auth(level: USER) {
+  moodEntry_delete(id: $id)
+}

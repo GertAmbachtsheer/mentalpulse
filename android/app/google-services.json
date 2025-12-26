@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "476879120298",
+    "project_id": "mentalpulse-6c2f1",
+    "storage_bucket": "mentalpulse-6c2f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476879120298:android:f4ee4c75241322728aadd3",
+        "android_client_info": {
+          "package_name": "com.example.metalpulse"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvG3pwrvNNhsTj6obUb88ZA0JTmnqbxq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,20 @@
+type User @table {
+  firebaseUID: String!
+  createdAt: Timestamp!
+  email: String
+  displayName: String
+}
+
+type MoodEntry @table {
+  user: User!
+  moodOption: MoodOption!
+  createdAt: Timestamp!
+  latitude: Float
+  longitude: Float
+  entryText: String
+}
+
+type MoodOption @table {
+  name: String!
+  value: String!
+}
