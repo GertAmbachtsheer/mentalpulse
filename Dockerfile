@@ -1,14 +1,14 @@
 # Stage 1: Build
 FROM ghcr.io/cirruslabs/flutter:stable AS build
-
-# Set working directory
 WORKDIR /app
 
-# Copy the pubspec and fetch dependencies
+# Pre-cache the Flutter Web SDK
+RUN flutter upgrade
+RUN flutter precache --web
+
 COPY pubspec.yaml pubspec.lock ./
 RUN flutter pub get
 
-# Copy the rest of the application
 COPY . .
 
 # Build the web application
