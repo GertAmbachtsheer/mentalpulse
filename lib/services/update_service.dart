@@ -42,6 +42,7 @@ class GitHubUpdateService {
     final url = Uri.parse(
       'https://api.github.com/repos/$owner/$repo/releases/latest',
     );
+    debugPrint('URL: ${url}');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
