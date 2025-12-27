@@ -33,13 +33,19 @@
   <title>MentalPulse</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    html, body {
+    html {
       height: 100%;
       width: 100%;
       margin: 0;
       padding: 0;
       overflow: hidden;
-      position: fixed; /* Aggressively lock the container */
+    }
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
       background-color: #EEF2FF; /* Match scaffold background */
     }
     #flutter_container {
@@ -48,30 +54,27 @@
     }
   </style>
   <script>
-    // Precision fix for mobile keyboard white block and "push up" issues
-    function resetScroll() {
+    function updateHeight() {
+      const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.body.style.height = vh + 'px';
+      
+      // Reset scroll position to avoid gaps
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-      // Trigger Flutter resize
+      
+      // Notify Flutter
       window.dispatchEvent(new Event('resize'));
     }
 
-    // Force reset on focus changes
-    window.addEventListener('focusin', resetScroll);
-    window.addEventListener('focusout', function() {
-      setTimeout(resetScroll, 100);
-    });
-
-    // Handle visual viewport changes defensively
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', resetScroll);
-      window.visualViewport.addEventListener('scroll', function() {
-        if (window.visualViewport.offsetTop > 0 || window.visualViewport.offsetLeft > 0) {
-          resetScroll();
-        }
-      });
+      window.visualViewport.addEventListener('resize', updateHeight);
+      window.visualViewport.addEventListener('scroll', updateHeight);
     }
+    window.addEventListener('resize', updateHeight);
+    window.addEventListener('orientationchange', updateHeight);
+    
+    // Call once to initialize
+    window.addEventListener('load', updateHeight);
   </script>
 </head>
 <body>
