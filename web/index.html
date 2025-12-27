@@ -46,30 +46,6 @@
       height: 100%;
     }
   </style>
-  <script>
-    // Robust fix for mobile keyboard white space and scroll offsets
-    function forceReset() {
-      window.scrollTo(0, 0);
-      document.body.scrollTop = 0;
-      document.documentElement.scrollTop = 0;
-      
-      // Notify Flutter that the viewport has changed
-      window.dispatchEvent(new Event('resize'));
-    }
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', function() {
-        // When the keyboard closes, height becomes larger.
-        // We use a small timeout to let the browser finish its layout shift.
-        setTimeout(forceReset, 100);
-      });
-    }
-
-    // Fallback for browsers without visualViewport or for focus change events
-    window.addEventListener('focusout', function() {
-      setTimeout(forceReset, 250);
-    });
-  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
