@@ -1,14 +1,14 @@
 # Stage 1: Build
-FROM ghcr.io/cirruslabs/flutter:stable AS build
+FROM ghcr.io/cirruslabs/flutter:latest AS build
 WORKDIR /app
 
-# Pre-cache the Flutter Web SDK
+# Ensure web is enabled
+RUN flutter config --enable-web
 RUN flutter precache --web
 
-COPY pubspec.yaml pubspec.lock ./
-RUN flutter pub get
-
+# Copy all files
 COPY . .
+RUN flutter pub get
 
 # Build the web application
 RUN flutter build web --release --web-renderer canvaskit
