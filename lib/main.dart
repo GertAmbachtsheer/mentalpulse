@@ -28,6 +28,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+
   final _updateService = GitHubUpdateService(
     owner: 'GertAmbachtsheer',
     repo: 'mentalpulse',
@@ -37,13 +39,17 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _updateService.checkForUpdates(context);
+      final context = _navigatorKey.currentContext;
+      if (context != null) {
+        _updateService.checkForUpdates(context);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: _navigatorKey,
       title: 'MentalPulse',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
