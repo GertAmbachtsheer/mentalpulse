@@ -33,14 +33,7 @@
   <title>MentalPulse</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    html {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    body {
+    html, body {
       height: 100%;
       width: 100%;
       margin: 0;
@@ -54,27 +47,28 @@
     }
   </style>
   <script>
-    function updateHeight() {
-      const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      document.body.style.height = vh + 'px';
-      
-      // Reset scroll position to avoid gaps
+    // Robust fix for mobile keyboard white space and scroll offsets
+    function forceReset() {
       window.scrollTo(0, 0);
       document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
       
-      // Notify Flutter
+      // Notify Flutter that the viewport has changed
       window.dispatchEvent(new Event('resize'));
     }
 
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', updateHeight);
-      window.visualViewport.addEventListener('scroll', updateHeight);
+      window.visualViewport.addEventListener('resize', function() {
+        // When the keyboard closes, height becomes larger.
+        // We use a small timeout to let the browser finish its layout shift.
+        setTimeout(forceReset, 100);
+      });
     }
-    window.addEventListener('resize', updateHeight);
-    window.addEventListener('orientationchange', updateHeight);
-    
-    // Call once to initialize
-    window.addEventListener('load', updateHeight);
+
+    // Fallback for browsers without visualViewport or for focus change events
+    window.addEventListener('focusout', function() {
+      setTimeout(forceReset, 250);
+    });
   </script>
 </head>
 <body>
