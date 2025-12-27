@@ -35,9 +35,11 @@
   <style>
     html, body {
       height: 100%;
+      width: 100%;
       margin: 0;
       padding: 0;
       overflow: hidden;
+      position: fixed; /* Aggressively lock the container */
       background-color: #EEF2FF; /* Match scaffold background */
     }
     #flutter_container {
@@ -46,32 +48,30 @@
     }
   </style>
   <script>
-    // Precision fix for mobile keyboard white block issues
+    // Precision fix for mobile keyboard white block and "push up" issues
+    function resetScroll() {
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+      // Trigger Flutter resize
+      window.dispatchEvent(new Event('resize'));
+    }
+
+    // Force reset on focus changes
+    window.addEventListener('focusin', resetScroll);
+    window.addEventListener('focusout', function() {
+      setTimeout(resetScroll, 100);
+    });
+
+    // Handle visual viewport changes defensively
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', function() {
-        // Reset scroll position to prevent the "white block" or offset
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-        
-        // Force Flutter to re-calculate its height
-        window.dispatchEvent(new Event('resize'));
-      });
-      
+      window.visualViewport.addEventListener('resize', resetScroll);
       window.visualViewport.addEventListener('scroll', function() {
-        // Prevent unwanted scrolling that causes white gaps
-        if (window.visualViewport.offsetTop > 0) {
-          window.scrollTo(0, 0);
+        if (window.visualViewport.offsetTop > 0 || window.visualViewport.offsetLeft > 0) {
+          resetScroll();
         }
       });
     }
-
-    // Fallback for focusout
-    window.addEventListener('focusout', function() {
-      setTimeout(function() {
-        window.scrollTo(0, 0);
-        window.dispatchEvent(new Event('resize'));
-      }, 100);
-    });
   </script>
 </head>
 <body>
