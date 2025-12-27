@@ -18,7 +18,7 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="A new Flutter project.">
 
   <!-- iOS meta tags & icons -->
@@ -37,7 +37,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      /* Remove overflow: hidden to allow the browser to reclaim space */
+      overflow: hidden;
       background-color: #EEF2FF; /* Match scaffold background */
     }
     #flutter_container {
@@ -46,11 +46,29 @@
     }
   </style>
   <script>
-    // Fix for mobile browsers not reclaiming space after keyboard closes
+    // Precision fix for mobile keyboard white block issues
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', function() {
+        // Reset scroll position to prevent the "white block" or offset
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+        
+        // Force Flutter to re-calculate its height
+        window.dispatchEvent(new Event('resize'));
+      });
+      
+      window.visualViewport.addEventListener('scroll', function() {
+        // Prevent unwanted scrolling that causes white gaps
+        if (window.visualViewport.offsetTop > 0) {
+          window.scrollTo(0, 0);
+        }
+      });
+    }
+
+    // Fallback for focusout
     window.addEventListener('focusout', function() {
-      window.scrollTo(0, 0);
-      // Force a slight delay to ensure the keyboard is fully closed
       setTimeout(function() {
+        window.scrollTo(0, 0);
         window.dispatchEvent(new Event('resize'));
       }, 100);
     });
