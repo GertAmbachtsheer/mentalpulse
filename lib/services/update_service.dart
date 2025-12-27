@@ -122,7 +122,10 @@ class GitHubUpdateService {
       barrierDismissible: false,
       builder: (context) {
         return StreamBuilder<OtaEvent>(
-          stream: OtaUpdate().execute(apkUrl),
+          stream: OtaUpdate().execute(
+            apkUrl,
+            destinationFilename: 'mentalpulse_update.apk',
+          ),
           builder: (context, snapshot) {
             String status = 'Initializing...';
             double? progress;
@@ -135,7 +138,12 @@ class GitHubUpdateService {
                   break;
                 case OtaStatus.INSTALLING:
                   status = 'Installing...';
-                  Navigator.pop(context); // Close dialog when installing
+                  // Close dialog safely after build
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    }
+                  });
                   break;
                 case OtaStatus.INSTALLATION_DONE:
                   status = 'Installation complete';
