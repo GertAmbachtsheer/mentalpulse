@@ -11,7 +11,7 @@ COPY . .
 RUN flutter pub get
 
 # Build the web application
-RUN flutter build web --release --web-renderer canvaskit
+RUN flutter build web --release
 
 # Stage 2: Serve
 FROM nginx:alpine
