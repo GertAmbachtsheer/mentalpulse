@@ -102,6 +102,7 @@ class _SignupPageState extends State<SignupPage> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
               constraints: const BoxConstraints(maxWidth: 500),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -151,8 +152,10 @@ class _SignupPageState extends State<SignupPage> {
                         const SizedBox(height: 24),
 
                         // Feature Icons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        Wrap(
+                          spacing: 16,
+                          runSpacing: 16,
+                          alignment: WrapAlignment.spaceAround,
                           children: [
                             _buildFeatureIcon(
                               Icons.shield_outlined,

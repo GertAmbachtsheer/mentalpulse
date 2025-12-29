@@ -70,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
               constraints: const BoxConstraints(maxWidth: 500),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -90,7 +91,10 @@ class _LoginPageState extends State<LoginPage> {
                   const CrisisBanner(),
 
                   Padding(
-                    padding: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
+                    ),
                     child: Column(
                       children: [
                         // Logo Placeholder

@@ -109,45 +109,62 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundColor: const Color(0xFFDBEAFE),
-            child: Text(
-              _user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A8A),
-              ),
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.maxWidth < 300) {
+            return Column(
               children: [
-                Text(
-                  _user?.displayName ?? 'User',
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
-                  ),
-                ),
-                Text(
-                  _user?.email ?? '',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xFF6B7280),
-                  ),
-                ),
+                _buildAvatar(),
+                const SizedBox(height: 16),
+                _buildDetails(),
               ],
-            ),
-          ),
-        ],
+            );
+          }
+          return Row(
+            children: [
+              _buildAvatar(),
+              const SizedBox(width: 20),
+              Expanded(child: _buildDetails()),
+            ],
+          );
+        },
       ),
+    );
+  }
+
+  Widget _buildAvatar() {
+    return CircleAvatar(
+      radius: 40,
+      backgroundColor: const Color(0xFFDBEAFE),
+      child: Text(
+        _user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+        style: const TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF1E3A8A),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          _user?.displayName ?? 'User',
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1F2937),
+          ),
+        ),
+        Text(
+          _user?.email ?? '',
+          style: const TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+        ),
+      ],
     );
   }
 
@@ -280,6 +297,29 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildMoodLegend() {
-    return Wrap(spacing: 16, runSpacing: 8);
+    return Wrap(
+      spacing: 16,
+      runSpacing: 8,
+      children: List.generate(_moodLabels.length, (index) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: _moodColors[index],
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              _moodLabels[index],
+              style: const TextStyle(fontSize: 12, color: Color(0xFF4B5563)),
+            ),
+          ],
+        );
+      }),
+    );
   }
 }

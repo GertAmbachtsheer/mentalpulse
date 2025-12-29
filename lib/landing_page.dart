@@ -7,6 +7,7 @@ import 'crisis_banner.dart';
 import 'widgets/support_section.dart';
 import 'widgets/keyboard_padding.dart';
 import 'profile_page.dart';
+import 'login_page.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -250,7 +251,10 @@ class _LandingPageState extends State<LandingPage> {
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               if (!context.mounted) return;
-              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const LoginPage()),
+                (route) => false,
+              );
             },
           ),
           IconButton(
@@ -278,13 +282,20 @@ class _LandingPageState extends State<LandingPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Welcome Section
-                        Text(
-                          'Welcome, ${_user?.displayName ?? 'Friend'}',
-                          style: const TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
-                          ),
+                        LayoutBuilder(
+                          builder: (context, constraints) {
+                            double fontSize = constraints.maxWidth < 400
+                                ? 24
+                                : 28;
+                            return Text(
+                              'Welcome, ${_user?.displayName ?? 'Friend'}',
+                              style: TextStyle(
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF1E3A8A),
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 8),
                         const Text(
@@ -360,64 +371,70 @@ class _LandingPageState extends State<LandingPage> {
                                 ),
                               ),
                               const SizedBox(height: 24),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: List.generate(_moods.length, (index) {
-                                  final mood = _moods[index];
-                                  final isSelected =
-                                      _selectedMoodIndex == index;
-                                  return GestureDetector(
-                                    onTap: () => _saveMood(index),
-                                    child: Column(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration: const Duration(
-                                            milliseconds: 200,
+                              Center(
+                                child: Wrap(
+                                  spacing: 16,
+                                  runSpacing: 16,
+                                  alignment: WrapAlignment.center,
+                                  children: List.generate(_moods.length, (
+                                    index,
+                                  ) {
+                                    final mood = _moods[index];
+                                    final isSelected =
+                                        _selectedMoodIndex == index;
+                                    return GestureDetector(
+                                      onTap: () => _saveMood(index),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          AnimatedContainer(
+                                            duration: const Duration(
+                                              milliseconds: 200,
+                                            ),
+                                            padding: const EdgeInsets.all(8),
+                                            decoration: BoxDecoration(
+                                              color: isSelected
+                                                  ? mood['color'].withValues(
+                                                      alpha: 0.2,
+                                                    )
+                                                  : Colors.grey[100],
+                                              shape: BoxShape.circle,
+                                              border: isSelected
+                                                  ? Border.all(
+                                                      color: mood['color'],
+                                                      width: 2,
+                                                    )
+                                                  : Border.all(
+                                                      color: Colors.transparent,
+                                                      width: 2,
+                                                    ),
+                                            ),
+                                            child: Icon(
+                                              mood['icon'],
+                                              size: 32,
+                                              color: isSelected
+                                                  ? mood['color']
+                                                  : Colors.grey[400],
+                                            ),
                                           ),
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: isSelected
-                                                ? mood['color'].withValues(
-                                                    alpha: 0.2,
-                                                  )
-                                                : Colors.grey[100],
-                                            shape: BoxShape.circle,
-                                            border: isSelected
-                                                ? Border.all(
-                                                    color: mood['color'],
-                                                    width: 2,
-                                                  )
-                                                : Border.all(
-                                                    color: Colors.transparent,
-                                                    width: 2,
-                                                  ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            mood['label'],
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.w600
+                                                  : FontWeight.normal,
+                                              color: isSelected
+                                                  ? mood['color']
+                                                  : Colors.grey[500],
+                                            ),
                                           ),
-                                          child: Icon(
-                                            mood['icon'],
-                                            size: 32,
-                                            color: isSelected
-                                                ? mood['color']
-                                                : Colors.grey[400],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Text(
-                                          mood['label'],
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: isSelected
-                                                ? FontWeight.w600
-                                                : FontWeight.normal,
-                                            color: isSelected
-                                                ? mood['color']
-                                                : Colors.grey[500],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ),
                               ),
                             ],
                           ),
